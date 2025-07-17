@@ -81,10 +81,6 @@
 # result = find_count_to_turn_out_to_all_zero_or_all_one(input)
 # print(result)
 
-# 각 알파벳은 중복이여도 상관 x 걍입력만 되면됨
-# 중간에 없는 알파벳이 있을수도있습니다 ? 이게 먼솔
-
-
 def summarize_string(target_string):
     age = int(input("나이를 입력하세요: "))
     print("내년엔", age + 1, "살이 되겠네요!")
