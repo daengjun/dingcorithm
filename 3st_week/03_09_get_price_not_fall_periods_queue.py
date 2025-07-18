@@ -1,0 +1,32 @@
+from collections import deque
+
+# queue = deque()
+# queue.append(3) [3]
+# queue.append(4) [3] -> [4]
+# queue.popleft() # 3이 반환되며 head,tail [4]가 된다
+
+prices = [1, 2, 3, 2, 3]
+
+def get_price_not_fall_periods(prices):
+    result = []
+    prices_queue = deque(prices)
+
+    while prices_queue:
+        price_not_fall_period = 0
+        current_price = prices_queue.popleft()
+        for next_price in prices_queue:
+            if current_price > next_price:
+                price_not_fall_period += 1
+                break
+            price_not_fall_period += 1
+
+        result.append(price_not_fall_period)
+
+    return result
+
+
+print(get_price_not_fall_periods(prices))
+
+print("정답 = [4, 3, 1, 1, 0] / 현재 풀이 값 = ", get_price_not_fall_periods(prices))
+print("정답 = [6, 2, 1, 3, 2, 1, 0] / 현재 풀이 값 = ", get_price_not_fall_periods([3, 9, 9, 3, 5, 7, 2]))
+print("정답 = [6, 1, 4, 3, 1, 1, 0] / 현재 풀이 값 = ", get_price_not_fall_periods([1, 5, 3, 6, 7, 6, 5]))
