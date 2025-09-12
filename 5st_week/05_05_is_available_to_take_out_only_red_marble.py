@@ -40,9 +40,13 @@ def move_until_wall_or_hole(r, c, diff_r, diff_c, game_map):
 
 
 def is_available_to_take_out_only_red_marble(game_map):
+    # n은 전체 인덱스 , game_map[0]은 배열 하나에 들어있는 인덱스
     n, m = len(game_map), len(game_map[0])
 
+    # 4차원 배열 생성
+    # [빨강구슬(red_row)][빨강구슬(red_col)][파랑구슬(blue_row)][파랑구슬(blue_col)]
     visited = [[[[False] * m for _ in range(n)] for _ in range(m)] for _ in range(n)]
+
     queue = deque()
     red_row, red_col, blue_row, blue_col = -1, -1, -1, -1
     for i in range(n):
@@ -61,13 +65,20 @@ def is_available_to_take_out_only_red_marble(game_map):
             break
 
         for i in range(4):
+            # 벽이나, 구멍이 아닐때까지 이동
             next_red_row, next_red_col, r_count = move_until_wall_or_hole(red_row, red_col, dr[i], dc[i], game_map)
             next_blue_row, next_blue_col, b_count = move_until_wall_or_hole(blue_row, blue_col, dr[i], dc[i], game_map)
 
-            if game_map[next_blue_row][next_blue_col] == 'O':  # 파란 구슬이 구멍에 떨어지지 않으면(실패 X)
+            # 성공 여부 확인
+            # 파란 구슬이 구멍에 떨어지지 않으면(실패 X)
+            if game_map[next_blue_row][next_blue_col] == 'O':
                 continue
-            if game_map[next_red_row][next_red_col] == 'O':  # 빨간 구슬이 구멍에 떨어진다면(성공)
+
+            # 빨간 구슬이 구멍에 떨어진다면(성공)
+            if game_map[next_red_row][next_red_col] == 'O':
                 return True
+
+            # 같은 위치라면 더많이 이동한 구슬을 한칸뒤로 이동
             if next_red_row == next_blue_row and next_red_col == next_blue_col:  # 빨간 구슬과 파란 구슬이 동시에 같은 칸에 있을 수 없다.
                 if r_count > b_count:  # 이동 거리가 많은 구슬을 한칸 뒤로
                     next_red_row -= dr[i]
@@ -75,9 +86,12 @@ def is_available_to_take_out_only_red_marble(game_map):
                 else:
                     next_blue_row -= dr[i]
                     next_blue_col -= dc[i]
+
             # BFS 탐색을 마치고, 방문 여부 확인
             if not visited[next_red_row][next_red_col][next_blue_row][next_blue_col]:
                 visited[next_red_row][next_red_col][next_blue_row][next_blue_col] = True
+
+                # 이동한 위치 queue에 저장
                 queue.append((next_red_row, next_red_col, next_blue_row, next_blue_col, try_count + 1))
 
     return False
